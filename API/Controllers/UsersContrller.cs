@@ -1,26 +1,24 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/users")]
-    public class UsersContrller : ControllerBase
-    {
-        private readonly DataContext _context;
-        public UsersContrller(DataContext context)
-        {
-            _context = context;
-        }
 
+    public class UsersController : BaseApiController
+    {
+
+        public UsersController(ILogger<UsersController> logger, DataContext context)
+            : base(logger, context)
+        {
+
+        }
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
@@ -28,7 +26,7 @@ namespace API.Controllers
             return users;
         }
 
-
+        [Authorize]
         [HttpGet("{Id}")]
         public async Task<ActionResult<AppUser>> GetUser(int id)
         {
